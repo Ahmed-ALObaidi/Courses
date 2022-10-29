@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "189338857262",
+    "project_id": "courses-d79cd",
+    "storage_bucket": "courses-d79cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189338857262:android:a16df0c9b754c25e47d4bf",
+        "android_client_info": {
+          "package_name": "com.example.courses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "189338857262-l6bh9l6ean10a9ihe9bpiss9m9qou6rp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.courses",
+            "certificate_hash": "5ed6718866ffa75dafbffb709b11a1616456f4ca"
+          }
+        },
+        {
+          "client_id": "189338857262-c6cdd4s7epcdb5av4n7c4hfgs29k2hhl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrwPYUl9etDdR72056YxBR3JgrOYgIRo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189338857262-c6cdd4s7epcdb5av4n7c4hfgs29k2hhl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
