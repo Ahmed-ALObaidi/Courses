@@ -24,7 +24,10 @@ class AddCourses extends StatefulWidget {
 
 class _AddCoursesState extends State<AddCourses> {
   getxcontroller controller = Get.find();
-
+  TextEditingController title = TextEditingController();
+  TextEditingController price = TextEditingController();
+  TextEditingController description = TextEditingController();
+  TextEditingController content = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,24 +38,25 @@ class _AddCoursesState extends State<AddCourses> {
               onPressed: () {
                 Get.offNamed("/Home");
               },
-              icon: Icon(Icons.backpack_rounded))
+              icon: const Icon(Icons.backpack_rounded))
         ],
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 15),
         child: Form(
           key: controller.formstate,
           child: ListView(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 300,
               ),
-              Text(
+              const Text(
                   "If you want to add a Course we need some information about this course : "),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
+                controller: title,
                 decoration: InputDecoration(
                     hintText: "Title of the Course : ",
                     border: OutlineInputBorder(
@@ -68,10 +72,11 @@ class _AddCoursesState extends State<AddCourses> {
                   Constants.title = newValue!;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
+                controller: description,
                 decoration: InputDecoration(
                     hintText: "Description of the Course : ",
                     border: OutlineInputBorder(
@@ -87,10 +92,11 @@ class _AddCoursesState extends State<AddCourses> {
                   Constants.description = newValue!;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
+                controller: content,
                 decoration: InputDecoration(
                     hintText: "Contents of Course : ",
                     border: OutlineInputBorder(
@@ -106,10 +112,11 @@ class _AddCoursesState extends State<AddCourses> {
                   Constants.content = newValue!;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
+                controller: price,
                 decoration: InputDecoration(
                     hintText: "The Price of the Course : ",
                     border: OutlineInputBorder(
@@ -125,37 +132,21 @@ class _AddCoursesState extends State<AddCourses> {
                   Constants.price = newValue!;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                decoration: InputDecoration(
-                    hintText: "Duration of the Course : ",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-                validator: (value) {
-                  if (value!.length < 2) {
-                    return "The Duration is too small.";
-                  } else {
-                    Constants.duration = value;
-                  }
-                },
-                onSaved: (newValue) {
-                  Constants.duration = newValue!;
-                },
-              ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GetBuilder<getxcontroller>(
                 init: getxcontroller(),
                 builder: (controller) => ElevatedButton(
                     onPressed: () async {
-                      await controller.uploadinfo();
+                      await controller.uploadinfo(title.text , description.text , content.text , price.text);
                     },
-                    child: Text("upload information")),
+                    child: const Text("upload information")),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GetBuilder<getxcontroller>(
@@ -164,7 +155,7 @@ class _AddCoursesState extends State<AddCourses> {
                     onPressed: () async {
                       await controller.selectfile();
                     },
-                    child: Text("select files")),
+                    child: const Text("select files")),
               ),
               GetBuilder<getxcontroller>(
                 init: getxcontroller(),
@@ -188,7 +179,7 @@ class _AddCoursesState extends State<AddCourses> {
                           .then((value) => value.prefixes.length);
                       Get.offNamed("/Home");
                     },
-                    child: Text("upload files")),
+                    child: const Text("upload files")),
               ),
             ],
           ),

@@ -28,9 +28,17 @@ class _SearchState extends State<Search> {
   String searchText = '';
 *
 * */
-  // late QuerySnapshot snapshotData;
-  late var snapshotData;
+  QuerySnapshot? snapshotData;
 
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero , (){
+      Constants.isExcuted = false;
+    });
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     Widget SearchedData() {
@@ -42,20 +50,19 @@ class _SearchState extends State<Search> {
                 return InkWell(
                     child: ListTile(
                   title: Text(
-                    snapshotData.docs[index].get("title").toString(),
+                    snapshotData!.docs[index].get("title").toString(),
                   ),
                   onTap: () {
                     Constants.titleofcourse =
-                        snapshotData.docs[index].get("title").toString();
+                        snapshotData?.docs[index].get("title").toString();
                     Get.toNamed("/Course");
                   },
                 ));
               },
-              itemCount: snapshotData.docs.length,
+              itemCount: snapshotData?.docs.length,
             );
           });
     }
-
     /*return GetBuilder<getxcontroller>(
             init: getxcontroller(),
             builder: (controller) {

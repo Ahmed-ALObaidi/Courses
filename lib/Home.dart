@@ -6,7 +6,7 @@ import 'package:courses/Search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'GetxController.dart';
-
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 class Home extends StatelessWidget {
   getxcontroller controller = Get.find();
   List<Widget> pages = [
@@ -25,13 +25,15 @@ class Home extends StatelessWidget {
         bottomNavigationBar: GetBuilder<getxcontroller>(
             init: getxcontroller(),
             builder: (_) => BottomNavigationBar(
+              selectedFontSize: 0.0,
+                  unselectedFontSize: 0.0,
                   type: BottomNavigationBarType.fixed,
                   currentIndex: Constants.currentIndex,
                   onTap: (value) {
                     controller.BottomNavigationBaronTap(value);
                     print("${Constants.currentIndex}");
                   },
-                  items: [
+                  items: const [
                     BottomNavigationBarItem(
                         icon: Icon(Icons.home), label: "Home"),
                     BottomNavigationBarItem(

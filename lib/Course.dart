@@ -27,11 +27,11 @@ class _CourseState extends State<Course> {
 
   @override
   void initState() {
-    futureFile = FirebaseStorage.instance
-        .ref("video/course ${Constants.titleofcourse}")
-        .listAll();
-    print(
-        "${FirebaseStorage.instance.ref("video/course ${Constants.titleofcourse}")}=============================");
+      futureFile = FirebaseStorage.instance
+          .ref("video/course ${Constants.titleofcourse}")
+          .listAll();
+      print(
+          "${FirebaseStorage.instance.ref("video/course ${Constants.titleofcourse}")}=============================");
     super.initState();
   }
 
@@ -46,38 +46,49 @@ class _CourseState extends State<Course> {
         appBar: AppBar(
           title: Text("Course"),
         ),
-        body: GetBuilder<getxcontroller>(
-          init: getxcontroller(),
-          builder: (getxcontroller) => FutureBuilder<ListResult>(
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                final files = snapshot.data!.items;
-                return ListView.builder(
-                  itemCount: files.length,
-                  itemBuilder: (context, index) {
-                    final file = files[index];
-                    return ListTile(
-                      title: Text("Video ${index}"),
-                      // subtitle: Text(file.name),
-                      onTap: () async {
-                        Constants.vidurlvew = [];
-                        Constants.vidurlvew.add(await file.getDownloadURL());
-                        controller.initialnow();
-                        Get.toNamed("/Video");
+        body: ListView(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            GetBuilder<getxcontroller>(
+              init: getxcontroller(),
+              builder: (getxcontroller) => FutureBuilder<ListResult>(
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    final files = snapshot.data!.items;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: files.length,
+                      itemBuilder: (context, index) {
+                        final file = files[index];
+                        return Card(
+                          child: ListTile(
+                            title: Text("Video ${index}"),
+                            onTap: () async {
+                              Constants.vidurlvew = [];
+                              Constants.vidurlvew
+                                  .add(await file.getDownloadURL());
+                              controller.initialnow();
+                              Get.toNamed("/Video");
+                            },
+                          ),
+                        );
                       },
                     );
-                  },
-                );
-              } else if (snapshot.hasError) {
-                return Text("Error");
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-            future: futureFile,
-          ),
+                  } else if (snapshot.hasError) {
+                    return const Text("Error");
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+                future: futureFile,
+              ),
+            )
+          ],
         ));
   }
 }

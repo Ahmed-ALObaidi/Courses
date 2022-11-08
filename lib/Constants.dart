@@ -12,6 +12,7 @@ class Constants {
   static late List pages;
   static List courses = [];
   static var usernameup;
+  static bool isMute = false;
   static var emailup;
   static bool uploadedimg = false;
   static var passup;
@@ -22,8 +23,6 @@ class Constants {
   static bool isRequesting = false;
   static bool isFinish = false;
 
-  static StreamController<List<DocumentSnapshot>> streamController =
-      StreamController<List<DocumentSnapshot>>.broadcast();
   static late bool isExcuted = false;
   static var title;
   static var description;
@@ -36,7 +35,6 @@ class Constants {
   static var vidurl;
   static var titleofcourse;
   static int vidid = 0;
-  static int top5id = 0;
   static List vidurlvew = [];
   static var firstcourse;
   static var lastcourse;

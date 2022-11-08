@@ -18,9 +18,13 @@ class _AccountState extends State<Account> {
 
   @override
   void initState() {
-    controller.profilePictureurl();
+    controller.printaccountusername();
+    controller.printaccountfname();
+    controller.printaccountlname();
+    controller.printaccountemail();
+    print("${controller.id()}56666666666666665");
+  controller.profilePictureurl();
     super.initState();
-    print("++++++++++++${getxcontroller.profileimageurl}+++++++++++++++++++");
   }
 
   @override
@@ -31,25 +35,26 @@ class _AccountState extends State<Account> {
       ),
       body: ListView(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           GetBuilder<getxcontroller>(
               init: getxcontroller(),
-              builder: (controller) => Row(
+              builder: (controller) =>
+                  Row(
                     children: [
                       CircleAvatar(
                           radius: 100,
                           backgroundImage:
-                              getxcontroller.profileimageurl == null
-                                  ? null
-                                  : NetworkImage(
-                                      '${getxcontroller.profileimageurl}'),
+                          getxcontroller.profileimageurl == null
+                              ? null
+                              : NetworkImage(
+                              '${getxcontroller.profileimageurl}'),
                           child: getxcontroller.profileimageurl == null
                               ? const Icon(
-                                  Icons.person,
-                                  size: 100,
-                                )
+                            Icons.person,
+                            size: 100,
+                          )
                               : null),
                       IconButton(
                           onPressed: () async {
@@ -59,16 +64,16 @@ class _AccountState extends State<Account> {
                                 return Column(
                                   children: [
                                     ListTile(
-                                      title: Text("From Camera"),
-                                      leading: Icon(Icons.camera),
+                                      title: const Text("From Camera"),
+                                      leading: const Icon(Icons.camera),
                                       onTap: () {
                                         controller.Imgfromcamera();
                                         Navigator.of(context).pop();
                                       },
                                     ),
                                     ListTile(
-                                      title: Text("From Gallary"),
-                                      leading: Icon(Icons.storage),
+                                      title: const Text("From Gallary"),
+                                      leading: const Icon(Icons.storage),
                                       onTap: () {
                                         controller.Imgfromgalary();
                                         // Get.offNamed("/Account");
@@ -76,8 +81,8 @@ class _AccountState extends State<Account> {
                                       },
                                     ),
                                     ListTile(
-                                      title: Text("Delete Picture"),
-                                      leading: Icon(Icons.delete),
+                                      title: const Text("Delete Picture"),
+                                      leading: const Icon(Icons.delete),
                                       onTap: () {
                                         controller.deleteprofilepic();
                                         // Get.offNamed("/Account");
@@ -92,24 +97,92 @@ class _AccountState extends State<Account> {
                           icon: Icon(Icons.camera_alt)),
                     ],
                   )),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
+
+
+
+          IntrinsicHeight(
+            child: Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+
+              children: [
+              Text("USER NAME : "),
+              GetBuilder<getxcontroller>(builder: (controller) {
+                return Center(child: Text("${controller.accountusername}" , style: TextStyle(fontSize: 18),));
+
+              },init: getxcontroller(),),
+            ],),
+          ),
+
+
+          IntrinsicHeight(
+            child: Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+
+              children: [
+              Text("First NAME : "),
+              GetBuilder<getxcontroller>(builder: (controller) {
+                return Center(child: Text("${controller.accountfname}" , style: TextStyle(fontSize: 18),));
+
+              },init: getxcontroller(),),
+            ],),
+          ),
+
+
+          IntrinsicHeight(
+            child: Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+
+              children: [
+              Text("LAST NAME : "),
+              GetBuilder<getxcontroller>(builder: (controller) {
+                return Center(child: Text("${controller.accountlname}" , style: TextStyle(fontSize: 18),));
+
+              },init: getxcontroller(),),
+            ],),
+          ),
+
+
+          IntrinsicHeight(
+            child: Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text("EMAIL : "),
+              GetBuilder<getxcontroller>(builder: (controller) {
+                return Center(child: Text("${controller.accountemail}" , style: TextStyle(fontSize: 18),));
+
+              },init: getxcontroller(),),
+            ],),
+          ),
+
+          IntrinsicHeight(
+            child: Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text("NAME : "),
+              GetBuilder<getxcontroller>(builder: (controller) {
+                return Center(child: Text("${controller.accountusername}" , style: TextStyle(fontSize: 18),));
+              },init: getxcontroller(),),
+            ],),
+          ),
+
           IntrinsicHeight(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Change Language : "),
+                const Text("Change Language : "),
                 ElevatedButton(
                     onPressed: () {
                       controller.changelocale("ar");
                     },
-                    child: Text("AR")),
+                    child: const Text("AR")),
                 ElevatedButton(
                     onPressed: () {
                       controller.changelocale("en");
                     },
-                    child: Text("EN")),
+                    child: const Text("EN")),
               ],
             ),
           ),
@@ -117,12 +190,12 @@ class _AccountState extends State<Account> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Change Mode : "),
+                const Text("Change Mode : "),
                 ElevatedButton(
                     onPressed: () {
                       controller.changetheme();
                     },
-                    child: Text("Change mode")),
+                    child: const Text("Change mode")),
               ],
             ),
           ),
@@ -130,12 +203,12 @@ class _AccountState extends State<Account> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Sign out : "),
+                const Text("Sign out : "),
                 ElevatedButton(
                     onPressed: () {
                       controller.signout();
                     },
-                    child: Text("out")),
+                    child: const Text("out")),
               ],
             ),
           ),
@@ -143,25 +216,41 @@ class _AccountState extends State<Account> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Change Password : "),
+                const Text("Change Password : "),
                 ElevatedButton(
                     onPressed: () {
                       Get.toNamed("/ChangePassword");
                     },
-                    child: Text("change")),
+                    child: const Text("change")),
               ],
             ),
           ),
+
           IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Change Email : "),
+                const Text("Change NAME : "),
+                ElevatedButton(
+                    onPressed: () {
+                      Get.toNamed("/ChangeName");
+                    },
+                    child: const Text("change")),
+              ],
+            ),
+          ),
+
+
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text("Change Email : "),
                 ElevatedButton(
                     onPressed: () async {
                       Get.toNamed("/ChangeEmail");
                     },
-                    child: Text("change")),
+                    child: const Text("change")),
               ],
             ),
           ),

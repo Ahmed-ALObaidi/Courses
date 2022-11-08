@@ -21,6 +21,8 @@ import 'GetxController.dart';
 import 'Locale.dart';
 import 'Home.dart';
 import 'Video.dart';
+import 'ChangeName.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/Course", page: () => Course()),
         GetPage(name: "/AddCourses", page: () => AddCourses()),
         GetPage(name: "/HomePage", page: () => HomePage()),
+        GetPage(name: "/ChangeName", page: () => ChangeName()),
         GetPage(name: "/Account", page: () => Account()),
         GetPage(name: "/Search", page: () => Search()),
         GetPage(name: "/SignIn", page: () => SignIn()),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,22 +20,38 @@ class getxcontroller extends GetxController {
   GlobalKey<FormState> formstate = GlobalKey<FormState>();
   static PlatformFile? pickedFile;
   List<PlatformFile>? pickedFiles;
+  var accountusername;
   static List<File> filesup = [];
   static List<String> pathesofvid = [];
   static late List<VideoPlayerController> controll;
   static SharedPreferences? share;
   static var listcourse;
-
+  var isplay = false;
   static var cont;
   late VideoPlayerController controllerr;
   var listofstream;
   static var profileimageurl;
+  var accountemail;
+  var accountfname;
+  var coursetitle;
+  var accountlname;
   static String name = "";
 
   BottomNavigationBaronTap(value) {
     Constants.currentIndex = value;
     update();
   }
+
+
+  playpousevideo(){
+    if (controllerr.value.isPlaying) {
+      controllerr.pause();
+    } else {
+      controllerr.play();
+    }
+    update();
+  }
+
 
   setBoolValue(bool myval) {
     Constants.isExcuted = myval;
@@ -61,6 +78,28 @@ class getxcontroller extends GetxController {
     await FirebaseAuth.instance.currentUser!.updatePassword(pass);
     print("============================================");
     Get.offNamed("/Account");
+  }
+
+
+  mute(VideoPlayerController controller)async{
+    controller.setVolume(Constants.isMute?1:0);
+    Constants.isMute =!Constants.isMute;
+    update();
+  }
+
+  beforetenminute(VideoPlayerController controller)async{
+    Duration? value =  await controller.position;
+    var d = value! - Duration(seconds: 10);
+    controller.seekTo(Duration(seconds: d.inSeconds));
+    update();
+  }
+
+
+  aftertenminute(VideoPlayerController controller)async{
+    Duration? value =  await controller.position;
+    var d = Duration(seconds: 10)+value!;
+    controller.seekTo(Duration(seconds: d.inSeconds));
+    update();
   }
 
   changeEmail(String email) async {
@@ -92,6 +131,7 @@ class getxcontroller extends GetxController {
 
   Stream<QuerySnapshot<Object?>> streambuild() async* {
     print("${getxcontroller.name}nnnnnnnnnnnnnnnnnnnnnnnnname");
+
     // if(getxcontroller.name != null && getxcontroller.name != ""){
     //  yield* FirebaseFirestore.instance.collection("courses")
     //       .where("userid",isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -100,6 +140,7 @@ class getxcontroller extends GetxController {
     //   yield* FirebaseFirestore.instance.collection("courses")
     //       .where("userid",isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots();
     // }
+
     yield* FirebaseFirestore.instance
         .collection("courses")
         .where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -123,73 +164,147 @@ class getxcontroller extends GetxController {
     update();
   }
 
-  void requestNextPage() async {
-    print("${Constants.products}*++++++++++++++++++++++++***");
-    if (!Constants.isRequesting && !Constants.isFinish) {
-      QuerySnapshot querySnapshot;
-      Constants.isRequesting = true;
-      if (Constants.products.isEmpty) {
-        querySnapshot = await FirebaseFirestore.instance
-            .collection('courses')
-            .where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .orderBy('title')
-            .limit(5)
-            .get();
-      } else {
-        querySnapshot = await FirebaseFirestore.instance
-            .collection('courses')
-            .where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .orderBy('title')
-            .startAfterDocument(
-                Constants.products[Constants.products.length - 1])
-            .limit(5)
-            .get();
-      }
-      if (querySnapshot != null) {
-        int oldSize = Constants.products.length;
-        Constants.products.addAll(querySnapshot.docs);
-        int newSize = Constants.products.length;
-        if (oldSize != newSize) {
-          Constants.streamController.add(Constants.products);
-          // if(Constants.streamController.isClosed){
-          //   Constants.streamController.add(Constants.products);
-          // }
-        } else {
-          Constants.isFinish = true;
-        }
-      }
-      Constants.isRequesting = false;
-    }
-    update();
-  }
+  // test()async{
+  //   if(await Constants.streamController.stream.isEmpty){
+  //     print("/////////////************************************//////////////////////");
+  //   }else{
+  //     print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%///****///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  //   }
+  //   update();
+  // }
 
-  void onChangeData(List<DocumentChange> documentChanges) {
-    var isChange = false;
-    documentChanges.forEach((productChange) {
-      if (productChange.type == DocumentChangeType.removed) {
-        Constants.products.removeWhere(
-          (product) => productChange.doc.id == product.id,
-        );
-        isChange = true;
-      } else {
-        if (productChange.type == DocumentChangeType.modified) {
-          int indexWhere = Constants.products.indexWhere(
-            (product) => productChange.doc.id == product.id,
-          );
-          if (indexWhere >= 0) {
-            Constants.products[indexWhere] = productChange.doc;
-          }
-          isChange = true;
-        }
-      }
-    });
-    if (isChange) {
-      if (!Constants.streamController.isClosed) {
-        Constants.streamController.add(Constants.products);
-      }
-    }
-    update();
-  }
+
+  //
+  // void requestNextPage(StreamController<List<DocumentSnapshot>> control) async {
+  //
+  //   if (!Constants.isRequesting && !Constants.isFinish) {
+  //     QuerySnapshot querySnapshot;
+  //     Constants.isRequesting = true;
+  //     if (Constants.products.isEmpty) {
+  //       querySnapshot = await FirebaseFirestore.instance
+  //           .collection('courses')
+  //           .where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //           .orderBy('title')
+  //           .limit(3)
+  //           .get();
+  //     } else {
+  //       querySnapshot = await FirebaseFirestore.instance
+  //           .collection('courses')
+  //           .where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //           .orderBy('title')
+  //           .startAfterDocument(
+  //               Constants.products[Constants.products.length - 1])
+  //           .limit(3)
+  //           .get();
+  //     }
+  //     if (querySnapshot != null) {
+  //       int oldSize = Constants.products.length;
+  //       Constants.products.addAll(querySnapshot.docs);
+  //       int newSize = Constants.products.length;
+  //       if (oldSize != newSize) {
+  //         control.add(Constants.products);
+  //         // if(Constants.streamController.isClosed){
+  //         //   Constants.streamController.add(Constants.products);
+  //         // }
+  //       } else {
+  //         Constants.isFinish = true;
+  //       }
+  //     }
+  //     Constants.isRequesting = false;
+  //   }
+  //   print("${Constants.products}*++++++++++++++++++++++++***");
+  //   print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+  //   update();
+  // }
+
+  //
+  // void requestNextPage() async {
+  //   print("${Constants.products}*++++++++++++++++++++++++***");
+  //   if (!Constants.isRequesting && !Constants.isFinish) {
+  //     QuerySnapshot querySnapshot;
+  //     Constants.isRequesting = true;
+  //     if (Constants.products.isEmpty) {
+  //       querySnapshot = await FirebaseFirestore.instance
+  //           .collection('courses').where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //           .orderBy('title')
+  //           .limit(5)
+  //           .get();
+  //     } else {
+  //       querySnapshot = await FirebaseFirestore.instance
+  //           .collection('courses').where("userid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //           .orderBy('title')
+  //           .startAfterDocument(Constants.products[Constants.products.length - 1])
+  //           .limit(5)
+  //           .get();
+  //     }if (querySnapshot != null) {
+  //       int oldSize = Constants.products.length;
+  //       Constants.products.addAll(querySnapshot.docs);
+  //       int newSize = Constants.products.length;
+  //       if (oldSize != newSize) {
+  //         Constants.streamController.add(Constants.products);
+  //       } else {
+  //         Constants.isFinish = true;
+  //       }
+  //     }
+  //     Constants.isRequesting = false;
+  //   }
+  // }
+  //
+  // void onChangeData(List<DocumentChange> documentChanges , StreamController<List<DocumentSnapshot>> control) {
+  //   print("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+  //   var isChange = false;
+  //   documentChanges.forEach((productChange) {
+  //     if (productChange.type == DocumentChangeType.removed) {
+  //       Constants.products.removeWhere(
+  //         (product) => productChange.doc.id == product.id,
+  //       );
+  //       isChange = true;
+  //     } else {
+  //       if (productChange.type == DocumentChangeType.modified) {
+  //         int indexWhere = Constants.products.indexWhere(
+  //           (product) => productChange.doc.id == product.id,
+  //         );
+  //         if (indexWhere >= 0) {
+  //           Constants.products[indexWhere] = productChange.doc;
+  //         }
+  //         isChange = true;
+  //       }
+  //     }
+  //   });
+  //   if (isChange) {
+  //     // if (!Constants.streamController.isClosed) {
+  //     control.add(Constants.products);
+  //     // }
+  //   }
+  //   update();
+  // }
+
+
+  //
+  // void onChangeData(List<DocumentChange> documentChanges) {
+  //   var isChange = false;
+  //   documentChanges.forEach((productChange) {
+  //     if (productChange.type == DocumentChangeType.removed) {
+  //       Constants.products.removeWhere((product) => productChange.doc.id == product.id,
+  //       );
+  //       isChange = true;
+  //     } else {
+  //       if (productChange.type == DocumentChangeType.modified) {
+  //         int indexWhere = Constants.products.indexWhere((product) => productChange.doc.id == product.id,
+  //         );
+  //         if (indexWhere >= 0) {
+  //           Constants.products[indexWhere] = productChange.doc;
+  //         }
+  //         isChange = true;
+  //       }
+  //     }
+  //   });
+  //   if(isChange) {
+  //     Constants.streamController.add(Constants.products);
+  //   }
+  // }
+
+
 
   Stream<QuerySnapshot> searchData(String string) async* {
     User? currentUser = FirebaseAuth.instance.currentUser;
@@ -332,15 +447,14 @@ class getxcontroller extends GetxController {
     update();
   }
 
-  uploadinfo() async {
+  uploadinfo(String title , String des , String cont , String pri ,) async {
     var formdata = formstate.currentState;
     if (formdata!.validate()) {
       await FirebaseFirestore.instance.collection("courses").add({
-        "title": Constants.title,
-        "description": Constants.description,
-        "duration": Constants.duration,
-        "contents": Constants.content,
-        "price": Constants.price,
+        "title": title,
+        "description": des,
+        "contents": cont,
+        "price": pri,
         "Time": DateTime.now(),
         "favorite": 0,
         "userid": FirebaseAuth.instance.currentUser!.uid,
@@ -414,6 +528,9 @@ class getxcontroller extends GetxController {
     update();
   }
 
+
+
+
   profilePictureurl() async {
     var doc_id;
     await FirebaseFirestore.instance
@@ -437,27 +554,143 @@ class getxcontroller extends GetxController {
     update();
   }
 
+  printaccountusername() async {
+    var doc_id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        doc_id = element.id;
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(doc_id)
+        .get()
+        .then((value) {
+      accountusername = value.get("username");
+    });
+    print("**${accountusername}--------------------------------------****");
+    update();
+    // return username;
+  }
+
+
+  printaccountfname() async {
+    var doc_id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        doc_id = element.id;
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(doc_id)
+        .get()
+        .then((value) {
+      accountfname = value.get("firstname");
+    });
+    print("**${accountfname}--------------------------------------****");
+    update();
+  }
+
+
+
+
+
+
+
+
+  ChangeAccountName(String user,String fname,String lname)async{
+    var doc_id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        doc_id = element.id;
+      });
+    });
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(doc_id)
+        .update({
+      "username": user,
+      "firstname": fname,
+      "lname": lname,
+    });
+  }
+
+
+  printaccountemail() async {
+    var doc_id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        doc_id = element.id;
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(doc_id)
+        .get()
+        .then((value) {
+      accountemail = value.get("email");
+    });
+    print("**${accountemail}--------------------------------------****");
+    update();
+  }
+
+
+
+  printaccountlname() async {
+    var doc_id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        doc_id = element.id;
+      });
+    });
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(doc_id)
+        .get()
+        .then((value) {
+      accountlname = value.get("lname");
+    });
+    print("**${accountlname}--------------------------------------****");
+    update();
+  }
+
+
+  id()async{
+    var doc_id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        doc_id = element.id;
+      });
+    });
+    // yield* doc_id;
+    update();
+  }
   deleteprofilepic() async {
-    ////////////////////////////////////////////////
-    // var elm;
-    // var list1 = [];
-    // var url;
-    // var strurl;
-    // var ref1;
-    // await FirebaseStorage.instance.ref()
-    //     .child("$coursename")
-    //     .listAll()
-    //     .then((value) => value.items.forEach((element) {
-    //   elm = element.name;
-    //   list1.add(elm);
-    // }));
-    // for (int a =0 ; a<list1.length ; a++){
-    //   ref1 =  await FirebaseStorage.instance.ref("$coursename/${list1[a]}");
-    //   url = await ref1.getDownloadURL();
-    //   strurl = await url.toString();
-    //   await FirebaseStorage.instance.refFromURL(strurl).delete();
-    // }
-    ////////////////////////////////////////////////////////////////////
     late var username;
     var doc_id;
     await FirebaseFirestore.instance
